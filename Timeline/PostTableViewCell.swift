@@ -25,8 +25,7 @@ class PostTableViewCell: UITableViewCell {
     }
     
     func updateWithPost(post: Post) {
-        
-         postImageView.image = post.photo
+        self.postImageView.image = post.photo
     }
 
 }

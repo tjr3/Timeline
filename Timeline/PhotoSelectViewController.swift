@@ -25,9 +25,9 @@ class PhotoSelectViewController: UIViewController, UIImagePickerControllerDelega
         // Dispose of any resources that can be recreated.
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        <#code#>
-    }
+//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+//        <#code#>
+//    }
 }
 
 protocol PhotoSelectViewControllerDelegate: class {

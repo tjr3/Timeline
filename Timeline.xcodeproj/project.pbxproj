@@ -109,10 +109,6 @@
 		68658B1B1CF8A1D60016C5CD = {
 			isa = PBXGroup;
 			children = (
-				CE2A372F1D0F7DA900A04B35 /* Comment+CoreDataProperties.swift */,
-				CE2A37251D0F742400A04B35 /* Post+CoreDataProperties.swift */,
-				CE2A37271D0F742400A04B35 /* SyncableObject+CoreDataProperties.swift */,
-				CE2A37281D0F742400A04B35 /* SyncableObject.swift */,
 				68658B261CF8A1D60016C5CD /* Timeline */,
 				68658B3B1CF8A1D60016C5CD /* TimelineTests */,
 				68658B461CF8A1D60016C5CD /* TimelineUITests */,
@@ -185,6 +181,10 @@
 			children = (
 				CE2A37301D0F7DA900A04B35 /* Comment.swift */,
 				CE2A37261D0F742400A04B35 /* Post.swift */,
+				CE2A372F1D0F7DA900A04B35 /* Comment+CoreDataProperties.swift */,
+				CE2A37251D0F742400A04B35 /* Post+CoreDataProperties.swift */,
+				CE2A37271D0F742400A04B35 /* SyncableObject+CoreDataProperties.swift */,
+				CE2A37281D0F742400A04B35 /* SyncableObject.swift */,
 			);
 			name = Model;
 			path = ..;

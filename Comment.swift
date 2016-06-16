@@ -24,6 +24,7 @@ class Comment: SyncableObject, SearchableRecord {
         
         self.text = text
         self.timestamp = timestamp
+        self.recordName = NSUUID().UUIDString
         
     }
     

@@ -43,21 +43,21 @@ class PostDetailTableViewController: UITableViewController, NSFetchedResultsCont
     func setupFetchedResultsController() {
         
         guard let post = post else { fatalError("Unable to use Post to set up fetched results controller")}
-        let request = NSFetchRequest(entityName: "Post")
-        let predicate = NSPredicate(format: "post == %@", argumentArray: [post])
+        let request = NSFetchRequest(entityName: "Comment")
+//        let predicate = NSPredicate(format: "post == %@", argumentArray: [post])
         let timeSortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
         
         request.returnsObjectsAsFaults = false
-        request.predicate = predicate
+//        request.predicate = predicate
         request.sortDescriptors = [timeSortDescriptor]
         
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: Stack.sharedStack.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: Stack.sharedStack.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         do {
-            try fetchedResultsController.performFetch()
+            try fetchedResultsController?.performFetch()
         } catch {
             print("Unable to perform fetch request")
         }
-        fetchedResultsController.delegate = self
+        fetchedResultsController?.delegate = self
     }
 
     // MARK: - Table view data source

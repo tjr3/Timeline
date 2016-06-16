@@ -25,13 +25,16 @@ class PostListTableViewController: UITableViewController, NSFetchedResultsContro
         
         setupFetchedResultsController()
         
-        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        
+
         guard let sections = fetchedResultsController?.sections else { return 1 }
         return sections.count
     }
@@ -43,31 +46,35 @@ class PostListTableViewController: UITableViewController, NSFetchedResultsContro
         return sectionInfo.numberOfObjects
     }
     
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 220
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCellWithIdentifier("postsCell", forIndexPath: indexPath) as? PostTableViewCell,
             let post = fetchedResultsController?.objectAtIndexPath(indexPath) as? Post else { return PostTableViewCell() }
+        cell.updateWithPost(post)
         return cell
     }
     
-    // MARK: - FetchedResutlsController
+    // MARK: - FetchedResultsController
     
     func setupFetchedResultsController() {
         
-        guard let post = post else { fatalError("Unable to use Post to set up fetched results controller")}
         let request = NSFetchRequest(entityName: "Post")
         let timeSortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
         
         request.returnsObjectsAsFaults = false
         request.sortDescriptors = [timeSortDescriptor]
         
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: Stack.sharedStack.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: Stack.sharedStack.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         do {
-            try fetchedResultsController.performFetch()
+            try self.fetchedResultsController!.performFetch()
         } catch {
             print("Unable to perform fetch request")
         }
-        fetchedResultsController.delegate = self
+        self.fetchedResultsController!.delegate = self
     }
     
     // MARK: NSFetcheResultsControllerDelegate
