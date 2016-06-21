@@ -14,20 +14,13 @@ class PhotoSelectViewController: UIViewController, UIImagePickerControllerDelega
     
     weak var delegate: PhotoSelectViewControllerDelegate?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
-//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-//        <#code#>
-//    }
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            delegate?.photoSelectViewControllerSelected(image)
+        }
+    }
 }
 
 protocol PhotoSelectViewControllerDelegate: class {

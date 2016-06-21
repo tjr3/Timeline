@@ -10,19 +10,20 @@ import Foundation
 import CloudKit
 import UIKit
 
+// This is ReUsable
+
 class CloudKitManager {
     
     private let creationDateKey = "creationDate"
     
     let publicDatabase = CKContainer.defaultContainer().publicCloudDatabase
     let privateDatabase = CKContainer.defaultContainer().privateCloudDatabase
-    
+                                                                                                    //rh Comments: Relating to Star Wars Analogy
     init() {
         checkCloudKitAvailability()
-        requestDiscoverabilityPermission()
     }
     
-    // MARK: - User Info Discovery -
+    // MARK: - User Info Discovery - \\
     
     // This pulls the record of the current user logged into the app
     func fetchLoggedInUserRecord(completion: ((record: CKRecord?, error: NSError?) -> Void)?) {
@@ -39,7 +40,7 @@ class CloudKitManager {
                 })
             }
         }
-    }
+    } // if I am logges in, it will fetch my record (FN 2817)
     
     // Go gets the name of the user from the RecordID
     func fetchUsernameFromRecordID(recordID: CKRecordID, completion: ((firstName: String?, lastName: String?) -> Void)?) {
@@ -57,7 +58,7 @@ class CloudKitManager {
         }
         
         CKContainer.defaultContainer().addOperation(operation)
-    }
+    } // From FN 2817 we get Finn
     
     // Goes and gets all contacts that are discoverable
     func fetchAllDiscoverableUsers(completion: ((userInfoRecords: [CKDiscoveredUserInfo]?) -> Void)?) {
@@ -72,8 +73,11 @@ class CloudKitManager {
         }
         
         CKContainer.defaultContainer().addOperation(operation)
-    }
-    // MARK: - Fetch Records -
+    } // Get all the Storm Troopers
+    
+    
+    // MARK: - Fetch Records - \\
+    
     
     // Takes in a RecordID and returns a record
     func fetchRecordWithID(recordID: CKRecordID, completion: ((record: CKRecord?, error: NSError?) -> Void)?) {
@@ -82,7 +86,7 @@ class CloudKitManager {
                 completion(record: record, error: error)
             }
         }
-    }
+    } //Brings back the record for whatever item has that ID (starship, blaster, trooper, schoolID, student number etc.)
     
     func fetchRecordsWithType(type: String, predicate: NSPredicate = NSPredicate(value: true), recordFetchedBlock: ((record: CKRecord) -> Void)?, completion: ((records: [CKRecord]?, error: NSError?) -> Void)?) {
         
@@ -115,7 +119,7 @@ class CloudKitManager {
         }
         
         self.publicDatabase.addOperation(queryOperation)
-    }
+    } // bring back all records of that type (all trooper records, all helmet records, all school records)
     
     func  fetchCurrentUserRecords(type: String, completion: ((records: [CKRecord]?, error: NSError?) -> Void)?) {
         fetchLoggedInUserRecord { (record, error) in
@@ -131,7 +135,7 @@ class CloudKitManager {
                 })
             }
         }
-    }
+    } // Calls for logged in user's record, it pulls all records associated to that specific user (driving record, payment records, mile record, blaster accuracy record). Get's Finn from his record, and than all records associated with him
     
     func fetchRecordsFromDateRange(type: String, fromDate: NSDate, toDate: NSDate, completion: ((records: [CKRecord]?, error: NSError?) -> Void)?) {
         let startDatePredicate = NSPredicate(format: "%K > %@", argumentArray: [creationDateKey, fromDate])
@@ -143,9 +147,10 @@ class CloudKitManager {
                 completion(records: records, error: error)
             }
         }
-    }
+    }// All helmet/trooper/starship records for this start date to this end date (ios6 cohort: all individuals records within the cohort starting from May 9th
     
-    // MARK: - Delete -
+    // MARK: - Delete - \\
+    
     
     func deleteRecordWithID(recordID: CKRecordID, completion: ((recordID: CKRecordID?, error: NSError?) -> Void)?) {
         publicDatabase.deleteRecordWithID(recordID) { (recordID, error) in
@@ -153,7 +158,7 @@ class CloudKitManager {
                 completion(recordID: recordID, error: error)
             }
         }
-    }
+    }// whatever record the ID belongs to, the record is destroyed (what if your Social Security number got deleted)
     
     func deleteRecordsWithID(recordIDs: [CKRecordID], completion: ((records: [CKRecord]?, recordIDs: [CKRecordID]?, error: NSError?) -> Void)?) {
         let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIDs)
@@ -167,9 +172,11 @@ class CloudKitManager {
         }
         
         CKContainer.defaultContainer().addOperation(operation)
-    }
+    } // find the younlings for these IDs, and kill them.
     
-    // MARK: - Save and Modify -
+    
+    // MARK: - Save and Modify - \\
+    
     
     func saveRecords(records: [CKRecord], perRecordCompletion: ((record: CKRecord?, error: NSError?) -> Void)?, completion: ((records: [CKRecord]?, error: NSError?) -> Void)?) {
         modifyRecords(records, perRecordCompletion: perRecordCompletion) { (records, error) in
@@ -208,9 +215,11 @@ class CloudKitManager {
         }
         
         publicDatabase.addOperation(operation)
-    }
+    } // updating records. If Finn went to the dentist, update his dental record. Finn took off his helmet, update his mental health record
+    
     
     //MARK: - CloudKit Permissions -
+    
     
     // Error Handeling
     func checkCloudKitAvailability() {
@@ -223,7 +232,6 @@ class CloudKitManager {
             }
         }
     }
-    
     
     // Letting the user know what error occured and where
     func handleCloudKitUnavaliable(accountStatus: CKAccountStatus, error: NSError?) {
@@ -257,7 +265,9 @@ class CloudKitManager {
         })
     }
     
+    
     //MARK: - CloudKit Discoverability
+    
     
     func requestDiscoverabilityPermission() {
         CKContainer.defaultContainer().statusForApplicationPermission(.UserDiscoverability) { (permissionStatus, error) in

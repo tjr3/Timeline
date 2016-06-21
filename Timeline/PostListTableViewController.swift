@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class PostListTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating {
+class PostListTableViewController: UITableViewController, UISearchResultsUpdating {
     
     var fetchedResultsController: NSFetchedResultsController?
     var searchController: UISearchController?
@@ -24,13 +24,27 @@ class PostListTableViewController: UITableViewController, NSFetchedResultsContro
         tableView.estimatedRowHeight = 40
         
         setupFetchedResultsController()
-        
+        setupSearchController()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
     }
     
+    @IBAction func refreshPulled(sender: UIRefreshControl) {
+        performFullSync() {
+            sender.endRefreshing() 
+        }
+    }
+    
+    func performFullSync(completion: (() -> Void)? = nil) {
+        let app = UIApplication.sharedApplication()
+        app.networkActivityIndicatorVisible = true
+        PostController.sharedController.performFullSync() {
+            app.networkActivityIndicatorVisible = false
+            completion?()
+        }
+    }
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -64,10 +78,8 @@ class PostListTableViewController: UITableViewController, NSFetchedResultsContro
         
         let request = NSFetchRequest(entityName: "Post")
         let timeSortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
-        
         request.returnsObjectsAsFaults = false
         request.sortDescriptors = [timeSortDescriptor]
-        
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: Stack.sharedStack.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         do {
             try self.fetchedResultsController!.performFetch()
@@ -78,42 +90,7 @@ class PostListTableViewController: UITableViewController, NSFetchedResultsContro
     }
     
     // MARK: NSFetcheResultsControllerDelegate
-    
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        tableView.beginUpdates()
-    }
-    
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        switch type {
-        case .Delete:
-            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Automatic)
-        case .Insert:
-            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Automatic)
-        default:
-            break
-        }
-    }
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        switch type {
-        case .Delete:
-            guard let indexPath = indexPath else {return}
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-        case .Insert:
-            guard let newIndexPath = newIndexPath else {return}
-            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
-        case .Update:
-            guard let indexPath = indexPath else {return}
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-        case .Move:
-            guard let indexPath = indexPath, newIndexPath = newIndexPath else {return}
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
-        }
-    }
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        tableView.endUpdates()
-    }
+
     
     // MARK: - Search Controller -
     
@@ -165,6 +142,45 @@ class PostListTableViewController: UITableViewController, NSFetchedResultsContro
                 detailVC.post = post
             }
         }
+    }
+}
+
+extension PostListTableViewController: NSFetchedResultsControllerDelegate {
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        tableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        switch type {
+        case .Delete:
+            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Automatic)
+        case .Insert:
+            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Automatic)
+        default:
+            break
+        }
+    }
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        switch type {
+        case .Delete:
+            guard let indexPath = indexPath else {return}
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        case .Insert:
+            guard let newIndexPath = newIndexPath else {return}
+            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
+        case .Update:
+            guard let indexPath = indexPath else {return}
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        case .Move:
+            guard let indexPath = indexPath, newIndexPath = newIndexPath else {return}
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        tableView.endUpdates()
     }
 }
 

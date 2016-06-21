@@ -12,20 +12,21 @@ import MessageUI
 class AddPostTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var image: UIImage?
-  
+    
+    
+   override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    // MARK: - Outlets -
+    
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var selectImage: UIButton!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
-    
     // MARK: - Action Buttons -
     
     @IBAction func selectImageButtonTapped(sender: AnyObject) {
-        
         
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self

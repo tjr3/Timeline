@@ -10,7 +10,10 @@ import UIKit
 
 class SearchResultsTableViewController: UITableViewController {
     
-    var resultsArray: [SearchableRecord] = []
+    var post: [Post] = []
+    
+    var resultsArray: [SearchableRecord] = [] // [] means the initial value has nothing, an empty array.
+    //     note: For now you will only display Post objects as a result of a search. Use the PostTableViewCell to do so.
 
     override func viewDidLoad() {
         super.viewDidLoad()
