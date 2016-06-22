@@ -14,8 +14,8 @@ import CoreData
 
 extension SyncableObject {
 
-    @NSManaged var timestamp: NSDate?
+    @NSManaged var timestamp: NSDate
     @NSManaged var recordIDData: NSData?
-    @NSManaged var recordName: String?
+    @NSManaged var recordName: String
 
 }
